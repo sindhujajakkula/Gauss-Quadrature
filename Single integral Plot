@@ -1,0 +1,57 @@
+# import module
+from scipy.special import roots_legendre, eval_legendre
+import matplotlib.pyplot as plt
+import numpy as np
+import sympy as sy
+from prettytable import PrettyTable 
+
+'''
+output is plot of
+1. plot of integral value vs number of gauss points used to calulate the integral value
+2. plot of difference between current and previous integral value
+3. plot of percentage difference between the current and previous integral value
+'''
+
+def func(x):
+  '''
+  x - variable in the integrand
+  function returns integrand of single variable whose integral is to evaluated
+  '''
+  return (x**6 - (x**2)*np.sin(2*x))
+  
+a=1 # lower interval
+b=3 # upper interval
+
+ng=8
+gauss_quad_prev = 0
+gauss_quad_result_list=[]
+diff_current_prev_list=[]
+percentage_difference_list=[]
+
+for n in range(1,ng):
+
+  roots, weights = roots_legendre(n) # finding roots and weights of nth order legendre polynomial, these roots lie between -1 and +1
+  modf_roots = (b-a)*roots/2 + (a+b)/2 # change of variables to transform the integral over arbitrary interval to an integral over [-1,1]
+  gauss_quad_result = (b - a)/2 * func(modf_roots).dot(weights) # obtaining value of integral through summation 
+  gauss_quad_result_list.append(gauss_quad_result)
+
+  if gauss_quad_prev != 0:
+    diff_current_prev = round(gauss_quad_result - gauss_quad_prev,7)
+    diff_current_prev_list.append(diff_current_prev)
+    percentage_difference = round((diff_current_prev/gauss_quad_prev)*100,7)
+    percentage_difference_list.append(percentage_difference)
+    
+  gauss_quad_prev=gauss_quad_result
+  n+=1
+
+
+gauss_points_list1 = np.arange(1, ng)
+gauss_points_list2 = np.arange(2, ng)
+plt.plot(gauss_points_list1, gauss_quad_result_list)
+plt.plot(gauss_points_list2, diff_current_prev_list)
+plt.plot(gauss_points_list2, percentage_difference_list)
+plt.legend(["Integral_value", "Diff_current_prev_value", "Percentage_diff"])
+# Set the y axis label of the current axis.
+plt.xlabel('Number of gauss points')
+plt.ylabel('Integral value')
+plt.show()
