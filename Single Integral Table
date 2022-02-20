@@ -1,0 +1,43 @@
+# import module
+from scipy.special import roots_legendre, eval_legendre
+import numpy as np
+from prettytable import PrettyTable 
+
+# output is a table with integral values for various number of gauss points, also gives comparison with the previous intergral value
+
+def func(x):
+  '''
+  x - variable in the integrand
+  function returns integrand of single variable whose integral is to evaluated
+  '''
+  return (x**6 - (x**2)*np.sin(2*x))
+
+a=1 # lower interval
+b=3 # upper interval
+
+# Specifing the Column Names while initializing the Table 
+myTable = PrettyTable(["No of Gauss points", "Ingtegral value", "Difference between current and previous integral value", "Percentage difference(%)"]) 
+
+
+ng=8
+gauss_quad_prev = 0
+for n in range(1,ng):
+
+  roots, weights = roots_legendre(n) # finding roots and weights of nth order legendre polynomial, these roots lie between -1 and +1
+  modf_roots = (b-a)*roots/2 + (a+b)/2 # transforming the roots on arbitrary interval using the change of variables
+  gauss_quad_result = (b - a)/2 * func(modf_roots).dot(weights) # obtaining value of integral through summation 
+
+  if gauss_quad_prev==0:
+    diff_current_prev = '-'
+    percentage_difference = '-'
+  else:
+    diff_current_prev = round(gauss_quad_result - gauss_quad_prev,7)
+    percentage_difference = round((diff_current_prev/gauss_quad_prev)*100,7)
+
+  # Add rows 
+  myTable.add_row([n, round(gauss_quad_result,7), diff_current_prev, percentage_difference]) 
+
+  gauss_quad_prev=gauss_quad_result
+  n+=1
+
+print(myTable)
