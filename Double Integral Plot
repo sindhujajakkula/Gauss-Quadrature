@@ -1,0 +1,64 @@
+# import module
+from scipy.special import roots_legendre
+import matplotlib.pyplot as plt
+import numpy as np
+
+# output is a plot to visualize integral values for various number of gauss points in x and y direction
+
+m=7 # number of gauss points in x direction
+n=7 # number of gauss points in y direction
+a=1.4 # lower interval of x variable
+b=2 # upper interval of x variable
+
+def c(x):
+  '''lower integral of y variable
+  in terms of x variable'''
+  return 1
+
+def d(x):
+  '''upper integral of y variable
+  in terms of x variable'''
+  return 1.5
+
+def f(x,y):
+  '''
+  x, y - variables in the integrand
+  function returns integrand of double variables whose integral is to evaluated
+  '''
+  return np.log(x+2*y)
+
+
+r, w = roots_legendre(m) 
+
+h1 = (b-a)/2
+h2 = (b+a)/2
+J=0
+I = np.zeros((m,n))
+
+for m in range(1, m+1):
+
+  for n in range(1, n+1):
+    
+    for i in range(m):
+      JX=0
+      x = h1*r[i] + h2
+      d1 = d(x)
+      c1 = c(x)
+      k1 = ( d1 - c1 )/2
+      k2 = ( d1 + c1 )/2
+      for j in range(n):
+        y = k1*r[j] + k2
+        Q = f(x, y)
+        JX += w[j]*Q
+      J += w[i]*k1*JX
+    I[m-1][n-1]=(h1*J)
+
+plt.rcParams["figure.figsize"] = [7.00, 3.50]
+plt.rcParams["figure.autolayout"] = True
+im = plt.imshow(I, cmap="copper_r")
+plt.colorbar(im)
+# Set the x axis label of the current axis.
+plt.xlabel('Number of gauss points in y-direction')
+# Set the y axis label of the current axis.
+plt.ylabel('Number of gauss points in x-direction')
+plt.show()
