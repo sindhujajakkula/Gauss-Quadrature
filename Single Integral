@@ -1,0 +1,30 @@
+
+from scipy.special import roots_legendre
+import numpy as np
+
+'''
+input - 
+function to be integrated - f(x)
+lower interval - a
+upper interval - b
+number of gauss points - n
+output -
+value of integral
+'''
+
+def func(x):
+  '''
+  x - variable in the integrand
+  function returns integrand of single variable whose integral is to evaluated
+  '''
+  return (x**6 - (x**2)*np.sin(2*x))
+  
+n = int(input('Enter the number of gauss points: '))
+a = float(input('Enter the lower interval: '))
+b = float(input('Enter the upper interval: '))
+
+roots, weights = roots_legendre(n) # finding roots and weights of nth order legendre polynomial
+modf_roots = (b-a)*roots/2 + (a+b)/2 # change of variables to transform the integral over arbitrary interval to an integral over [-1,1]
+
+gauss_quad_result = (b - a)/2 * func(modf_roots).dot(weights) # obtaining the value of the integral through summation
+print('Integral value using gauss quadraure method using '+str(n)+' gauss points = ', gauss_quad_result, '\n')
