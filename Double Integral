@@ -1,0 +1,49 @@
+from scipy.special import roots_legendre
+import numpy as np
+
+m=5 # number of gauss points in x direction
+n=5 # number of gauss points in y direction
+
+a= 0.1 # lower interval of x variable
+b= 0.5 # upper interval of x variable
+
+def c(x):
+  '''lower integral of y variable
+  in terms of x variable'''
+  return x**3
+
+def d(x):
+  '''upper integral of y variable
+  in terms of x variable'''
+  return x**2
+
+def f(x,y):
+  '''
+  x, y - variables in the integrand
+  function returns integrand of double variables whose integral is to evaluated
+  '''
+  return np.exp(y/x)
+
+if m>=n:
+  r, w = roots_legendre(m) 
+else:
+  r, w = roots_legendre(n)
+
+h1 = (b-a)/2
+h2 = (b+a)/2
+J=0
+for i in range(m):
+  JX=0
+  x = h1*r[i] + h2
+  d1 = d(x)
+  c1 = c(x)
+  k1 = ( d1 - c1 )/2
+  k2 = ( d1 + c1 )/2
+  for j in range(n):
+    y = k1*r[j] + k2
+    Q = f(x, y)
+    JX += w[j]*Q
+  J += w[i]*k1*JX
+I = h1*J
+
+print(f"Integral value using gauss quadraure method with {m} gauss points in x-direction and {n} gauss points in y-direction = {I}") 
