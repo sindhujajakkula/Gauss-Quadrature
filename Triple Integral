@@ -8,30 +8,43 @@ import sympy as sy
 from prettytable import PrettyTable
 import numpy as np
 
-m = 10
-n = 10
-p = 10
+m = 10 # number of gauss points in x direction
+n = 10 # number of gauss points in y direction
+p = 10 # number of gauss points in z direction
 
-a= 0
-b= 1
+a= 0 # lower interval of x variable
+b= 1 # upper interval of x variable
 
 def c(x):
+  '''lower integral of y variable
+  in terms of x variable'''
   return (1)
 def d(x):
+  '''upper integral of y variable
+  in terms of x variable'''
   return (x)
 
 def alpha(x,y):
+  '''lower integral of z variable
+  in terms of x and y variable'''
   return -y
 def beta(x,y):
+  '''upper integral of z variable
+  in terms of x and y variable'''
   return (x+y)
 
 def f(x,y,z):
+  '''
+  x, y, z - variables in the integrand
+  function returns integrand of double variables whose integral is to evaluated
+  '''
   return (x)
 
 h1 = (b-a)/2
 h2 = (a+b)/2
 N  = max(m,n,p)
 r, w = roots_legendre(N)
+
 J = 0
 for i in range(m):
   x = h1*r[i] + h2
@@ -39,7 +52,6 @@ for i in range(m):
   c1 = c(x)
   k1 = (d1 - c1)/2
   k2 = (d1 + c1)/2
-  
   JX = 0
   for j in range(n):
     y = k1*r[j] + k2
