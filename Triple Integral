@@ -1,39 +1,32 @@
-
+import numpy as np
+from matplotlib import pyplot as plt
 # import module
-from scipy.special import roots_legendre
+from scipy.special import roots_legendre, eval_legendre
+import matplotlib.pyplot as plt
+import numpy as np
+import sympy as sy
+from prettytable import PrettyTable
 import numpy as np
 
-m = 5 # number of gauss points in x direction
-n = 5 # number of gauss points in y direction
-p = 5 # number of gauss points in z direction
+m = 10
+n = 10
+p = 10
 
-a= 1 # lower interval of x variable
-b= 2 # lower interval of x variable
+a= 0
+b= 1
 
 def c(x):
-  '''lower integral of y variable
-  in terms of x variable'''
-  return (2)
+  return (1)
 def d(x):
-  '''upper integral of y variable
-  in terms of x variable'''
-  return (3)
+  return (x)
 
 def alpha(x,y):
-  '''lower integral of z variable
-  in terms of x and y variables'''
-  return 0
+  return -y
 def beta(x,y):
-  '''upper integral of z variable
-  in terms of x and y variables'''
-  return (1)
+  return (x+y)
 
 def f(x,y,z):
-  '''
-  x, y, z - variables in the integrand
-  function returns integrand of 3 variables whose integral is to evaluated
-  '''
-  return (x*y*z)
+  return (x)
 
 h1 = (b-a)/2
 h2 = (a+b)/2
@@ -59,8 +52,8 @@ for i in range(m):
       z = l1*r[k] + l2
       Q = f(x, y, z)
       JY += w[k]*f(x, y, z)
-    JX += JY*w[j]*k1
-  J += JX*w[i]*l1
+    JX += JY*w[j]*l1
+  J += JX*w[i]*k1
 J = h1*J
 
 print(f"Integral value using gauss quadraure method with {m} gauss points in x-direction, {n} gauss points in y-direction and {p} gauss points in z-direction = {J}") 
